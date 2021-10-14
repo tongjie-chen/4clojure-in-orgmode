@@ -1,32 +1,30 @@
+This part downloads the json file.
 #+begin_src sh 
 cd /tmp
 wget https://raw.githubusercontent.com/oxalorg/4ever-clojure/main/public/data/problems.json
 #+end_src    
 
+This parses json file and then outputs to a file in /tmp folder.
 #+begin_src emacs-lisp
 (find-file "/tmp/problems.json")
-(json-parse-buffer)
-(json-parse-buffer :object-type 'alist :array-type 'array)
-#+end_src
-
-#+begin_src emacs-lisp
-(with-temp-file "~/Program/clojure/4clojure.org-temp"
-(dotimes (i (length temp-4clojure))
-(let ((item (aref temp-4clojure i)))
-(insert "\n* ")
-(condition-case nil (insert (format "%d" (cdr (assoc '_id item))) ". ") (error nil))
-(insert (cdr (assoc 'title item)) "\n")
-(insert (html-to-markdown-string (cdr (assoc 'description item))) "\n")
-(insert "#+begin_src clojure\n")
-(insert "(def __ )\n")
-(let ((tests (cdr (assoc 'tests item))))
-(dotimes (j (length tests))
-(insert (aref tests j) "\n"))
-)
-(insert "#+end_src")
-)
-)
-(beginning-of-buffer)
-(replace-string "" "")
-)
+(let ((temp-4clojure (json-parse-buffer :object-type 'alist :array-type 'array)))
+  (with-temp-file "/tmp/4clojure.org-temp"
+    (dotimes (i (length temp-4clojure))
+      (let ((item (aref temp-4clojure i)))
+      (insert "\n* ")
+      (condition-case nil (insert (format "%d" (cdr (assoc '_id item))) ". ") (error nil))
+      (insert (cdr (assoc 'title item)) "\n")
+      (insert (html-to-markdown-string (cdr (assoc 'description item))) "\n")
+      (insert "#+begin_src clojure\n")
+      (insert "(def __ )\n")
+      (let ((tests (cdr (assoc 'tests item))))
+	(dotimes (j (length tests))
+	  (insert (aref tests j) "\n"))
+	)
+      (insert "#+end_src")
+      )
+    )
+  (beginning-of-buffer)
+  (replace-string "" "")
+  ))
 #+end_src
