@@ -1,10 +1,9 @@
+* Parser
 This part downloads the json file.
 #+begin_src sh 
 cd /tmp
 wget https://raw.githubusercontent.com/oxalorg/4ever-clojure/main/public/data/problems.json
 #+end_src    
-
-#+RESULTS:
 
 Open the json file and change "let's" to "let us" and "you'd" to "you would" so ~html-to-markdown-string~ will not run to errors.
 
@@ -36,4 +35,15 @@ This parses json file and then outputs to a file in /tmp folder.
     )))
 #+end_src
 
-#+RESULTS:
+* How to use
+Following the method described by Sacha Chua, https://sachachua.com/blog/2014/05/playing-around-clojure-cider-4clojure/, you will just need to change the result to be defined after "__". You babel execution should return all true.
+
+#+begin_src clojure 
+(defn __ [x] (= (seq x) (reverse x)))
+(list
+  (false? (__ '(1 2 3 4 5)))
+  (true? (__ "racecar"))
+  (true? (__ [:foo :bar :foo]))
+  (true? (__ '(1 1 3 3 1 1)))
+  (false? (__ '(:a :b :c))))
+#+end_src
